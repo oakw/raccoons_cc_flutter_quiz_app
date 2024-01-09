@@ -17,18 +17,28 @@ class MainApp extends StatelessWidget {
               padding: EdgeInsets.only(top: 30, left: 10),
               child: Text("Kurš ir ātrākais sauszemes dzīvnieks?"),
             ),
-            Row(
-              children: [
-                Option(text: "Bruņurupucis", isCorrect: false),
-                Option(text: "Jaguārs", isCorrect: true),
-              ],
+            // Pirmā rinda ar atbilžu variantiem
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Option(text: "Bruņurupucis", isCorrect: false),
+                  Option(text: "Jaguārs", isCorrect: true),
+                ],
+              ),
             ),
-            Row(
-              children: [
-                Option(text: "Lauva", isCorrect: false),
-                Option(text: "Strauss", isCorrect: false),
-              ],
-            )
+            // Otrā rinda ar atbilžu variantiem
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Option(text: "Lauva", isCorrect: false),
+                  Option(text: "Strauss", isCorrect: false),
+                ],
+              ),
+            ),
           ],
         ),
       ),
@@ -48,6 +58,10 @@ class Option extends StatelessWidget {
   @override
   Widget build(context) {
     return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.blueAccent,
+        fixedSize: const Size.fromWidth(140),
+      ),
       onPressed: () {
         if (isCorrect) {
           showDialog(
@@ -65,7 +79,7 @@ class Option extends StatelessWidget {
       },
       child: Text(
         text,
-        style: const TextStyle(color: Colors.red),
+        style: const TextStyle(color: Colors.white),
       ),
     );
   }
