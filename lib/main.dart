@@ -45,9 +45,14 @@ class Option extends StatelessWidget {
 
   @override
   Widget build(context) {
-    return Text(
-      text,
-      style: const TextStyle(color: Colors.red),
+    return ElevatedButton(
+      onPressed: () {
+        print("Izvēle ir izdarīta!");
+      },
+      child: Text(
+        text,
+        style: const TextStyle(color: Colors.red),
+      ),
     );
   }
 }
