@@ -19,19 +19,35 @@ class MainApp extends StatelessWidget {
             ),
             Row(
               children: [
-                Text("Bruņurupucis"),
-                Text("Jaguārs"),
+                Option(text: "Bruņurupucis"),
+                Option(text: "Jaguārs"),
               ],
             ),
             Row(
               children: [
-                Text("Lauva"),
-                Text("Strauss"),
+                Option(text: "Lauva"),
+                Option(text: "Strauss"),
               ],
             )
           ],
         ),
       ),
+    );
+  }
+}
+
+class Option extends StatelessWidget {
+  final String text;
+  const Option({
+    super.key,
+    required this.text,
+  });
+
+  @override
+  Widget build(context) {
+    return Text(
+      text,
+      style: const TextStyle(color: Colors.red),
     );
   }
 }
