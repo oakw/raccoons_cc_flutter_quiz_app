@@ -11,7 +11,10 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       home: Scaffold(
-        body: Text("Hello world!"),
+        body: Padding(
+          padding: EdgeInsets.only(top: 30, left: 10),
+          child: Text("Kurš ir ātrākais sauszemes dzīvnieks?"),
+        ),
       ),
     );
   }
