@@ -19,14 +19,14 @@ class MainApp extends StatelessWidget {
             ),
             Row(
               children: [
-                Option(text: "Bruņurupucis"),
-                Option(text: "Jaguārs"),
+                Option(text: "Bruņurupucis", isCorrect: false),
+                Option(text: "Jaguārs", isCorrect: true),
               ],
             ),
             Row(
               children: [
-                Option(text: "Lauva"),
-                Option(text: "Strauss"),
+                Option(text: "Lauva", isCorrect: false),
+                Option(text: "Strauss", isCorrect: false),
               ],
             )
           ],
@@ -38,16 +38,22 @@ class MainApp extends StatelessWidget {
 
 class Option extends StatelessWidget {
   final String text;
+  final bool isCorrect;
   const Option({
     super.key,
     required this.text,
+    required this.isCorrect,
   });
 
   @override
   Widget build(context) {
     return ElevatedButton(
       onPressed: () {
-        print("Izvēle ir izdarīta!");
+        if (isCorrect) {
+          print("Atbilde ir pareiza");
+        } else {
+          print("Atbilde nav pareiza");
+        }
       },
       child: Text(
         text,
