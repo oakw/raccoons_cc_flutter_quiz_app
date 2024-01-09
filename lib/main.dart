@@ -50,9 +50,17 @@ class Option extends StatelessWidget {
     return ElevatedButton(
       onPressed: () {
         if (isCorrect) {
-          print("Atbilde ir pareiza");
+          showDialog(
+              context: context,
+              builder: (BuildContext builder) {
+                return const AlertDialog(content: Text("Atbilde ir pareiza"));
+              });
         } else {
-          print("Atbilde nav pareiza");
+          showDialog(
+              context: context,
+              builder: (BuildContext builder) {
+                return const AlertDialog(content: Text("Atbilde nav pareiza"));
+              });
         }
       },
       child: Text(
