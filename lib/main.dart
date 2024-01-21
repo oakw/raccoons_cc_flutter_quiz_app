@@ -17,6 +17,15 @@ class MainApp extends StatelessWidget {
               padding: EdgeInsets.only(top: 30, left: 10),
               child: Text("Kurš ir ātrākais sauszemes dzīvnieks?"),
             ),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 10.0),
+              child: Image(
+                image: NetworkImage(
+                  "https://i.imgur.com/uSqV5vg_d.webp?maxwidth=760",
+                  scale: 4,
+                ),
+              ),
+            ),
             // Pirmā rinda ar atbilžu variantiem
             Padding(
               padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
