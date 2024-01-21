@@ -24,42 +24,60 @@ class _AppState extends State<MainApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        body: Column(
+        body: ListView(
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              child: Text("Punktu skaits: $_pointCount"),
-            ),
-            Question(
-              text: "Kurš ir ātrākais sauszemes dzīvnieks?",
-              options: [
-                Option(text: "Bruņurupucis", isCorrect: false),
-                Option(text: "Jaguārs", isCorrect: true),
-                Option(text: "Lauva", isCorrect: false),
-                Option(text: "Strauss", isCorrect: false),
+            Wrap(
+              alignment: WrapAlignment.center,
+              children: [
+                ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 500),
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10),
+                        child: Text("Punktu skaits: $_pointCount"),
+                      ),
+                      Question(
+                        text: "Kurš ir ātrākais sauszemes dzīvnieks?",
+                        options: [
+                          Option(text: "Bruņurupucis", isCorrect: false),
+                          Option(text: "Jaguārs", isCorrect: true),
+                          Option(text: "Lauva", isCorrect: false),
+                          Option(text: "Strauss", isCorrect: false),
+                        ],
+                        addPoints: _addPoints,
+                        image: const Image(
+                          image: NetworkImage(
+                            "https://i.imgur.com/zUd7HrK_d.webp?maxwidth=760",
+                            scale: 3,
+                          ),
+                        ),
+                      ),
+                      Question(
+                        text: "Kā sauc sīku ūdens pilienu uzkrāšanos atmosfēras zemākajos slāņos?",
+                        options: [
+                          Option(text: "Iztvaikošana", isCorrect: false),
+                          Option(text: "Varavīksne", isCorrect: false),
+                          Option(text: "Rasa", isCorrect: false),
+                          Option(text: "Migla", isCorrect: true),
+                        ],
+                        addPoints: _addPoints,
+                      ),
+                      Question(
+                        text: "Kurš ieguva FIFA 2023. gada labākā futbolista balvu?",
+                        options: [
+                          Option(text: "Krištianu Ronaldu", isCorrect: false),
+                          Option(text: "Lionels Mesi", isCorrect: true),
+                          Option(text: "Roberts Levandovskis", isCorrect: false),
+                          Option(text: "Karīms Benzemā", isCorrect: false),
+                        ],
+                        addPoints: _addPoints,
+                      ),
+                    ],
+                  ),
+                ),
               ],
-              addPoints: _addPoints,
-            ),
-            Question(
-              text: "Kā sauc sīku ūdens pilienu uzkrāšanos atmosfēras zemākajos slāņos?",
-              options: [
-                Option(text: "Iztvaikošana", isCorrect: false),
-                Option(text: "Varavīksne", isCorrect: false),
-                Option(text: "Rasa", isCorrect: false),
-                Option(text: "Migla", isCorrect: true),
-              ],
-              addPoints: _addPoints,
-            ),
-            Question(
-              text: "Kurš ieguva FIFA 2023. gada labākā futbolista balvu?",
-              options: [
-                Option(text: "Krištianu Ronaldu", isCorrect: false),
-                Option(text: "Lionels Mesi", isCorrect: true),
-                Option(text: "Roberts Levandovskis", isCorrect: false),
-                Option(text: "Karīms Benzemā", isCorrect: false),
-              ],
-              addPoints: _addPoints,
-            ),
+            )
           ],
         ),
       ),
@@ -120,12 +138,14 @@ class _OptionState extends State<Option> {
 class Question extends StatefulWidget {
   final String text;
   final List<Option> options;
+  final Image? image;
   final Function(int) addPoints;
   const Question({
     super.key,
     required this.text,
     required this.options,
     required this.addPoints,
+    this.image,
   });
 
   @override
@@ -188,6 +208,12 @@ class _QuestionState extends State<Question> {
               textAlign: TextAlign.center,
             ),
           ),
+          if (widget.image != null) ...[
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10.0),
+              child: widget.image,
+            )
+          ],
           ...getOptionRows()
         ],
       ),
