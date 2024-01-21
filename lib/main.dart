@@ -4,15 +4,32 @@ void main() {
   runApp(const MainApp());
 }
 
-class MainApp extends StatelessWidget {
+class MainApp extends StatefulWidget {
   const MainApp({super.key});
 
   @override
+  State<StatefulWidget> createState() => _AppState();
+}
+
+class _AppState extends State<MainApp> {
+  int _pointCount = 0;
+
+  void _addPoints(int points) {
+    setState(() {
+      _pointCount += points;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       home: Scaffold(
         body: Column(
           children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              child: Text("Punktu skaits: $_pointCount"),
+            ),
             Question(
               text: "Kurš ir ātrākais sauszemes dzīvnieks?",
               options: [
@@ -21,6 +38,7 @@ class MainApp extends StatelessWidget {
                 Option(text: "Lauva", isCorrect: false),
                 Option(text: "Strauss", isCorrect: false),
               ],
+              addPoints: _addPoints,
             ),
             Question(
               text: "Kā sauc sīku ūdens pilienu uzkrāšanos atmosfēras zemākajos slāņos?",
@@ -30,6 +48,7 @@ class MainApp extends StatelessWidget {
                 Option(text: "Rasa", isCorrect: false),
                 Option(text: "Migla", isCorrect: true),
               ],
+              addPoints: _addPoints,
             ),
             Question(
               text: "Kurš ieguva FIFA 2023. gada labākā futbolista balvu?",
@@ -39,6 +58,7 @@ class MainApp extends StatelessWidget {
                 Option(text: "Roberts Levandovskis", isCorrect: false),
                 Option(text: "Karīms Benzemā", isCorrect: false),
               ],
+              addPoints: _addPoints,
             ),
           ],
         ),
@@ -47,39 +67,48 @@ class MainApp extends StatelessWidget {
   }
 }
 
-class Option extends StatelessWidget {
+class Option extends StatefulWidget {
   final String text;
   final bool isCorrect;
-  const Option({
+  Function(bool)? optionSelected;
+  bool isLocked;
+  Option({
     super.key,
     required this.text,
     required this.isCorrect,
+    this.optionSelected,
+    this.isLocked = false,
   });
+
+  @override
+  State<StatefulWidget> createState() => _OptionState();
+}
+
+class _OptionState extends State<Option> {
+  bool answered = false;
+
+  // Lietotājs uzklikšķina uz atbilžu varianta
+  void _handleTap() {
+    setState(() {
+      // Neļauj izvēlēt variantu, ja tas bloķēts (piemēram, jo jautājums jau atbildēts)
+      if (!widget.isLocked) {
+        answered = true;
+        // Paziņo vecāk-komponentei, ka atbilžu variants izvēlēts
+        widget.optionSelected?.call(widget.isCorrect);
+      }
+    });
+  }
 
   @override
   Widget build(context) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.blueAccent,
+        backgroundColor: answered ? (widget.isCorrect ? Colors.greenAccent : Colors.redAccent) : Colors.blueAccent,
         fixedSize: const Size.fromWidth(140),
       ),
-      onPressed: () {
-        if (isCorrect) {
-          showDialog(
-              context: context,
-              builder: (BuildContext builder) {
-                return const AlertDialog(content: Text("Atbilde ir pareiza"));
-              });
-        } else {
-          showDialog(
-              context: context,
-              builder: (BuildContext builder) {
-                return const AlertDialog(content: Text("Atbilde nav pareiza"));
-              });
-        }
-      },
+      onPressed: _handleTap,
       child: Text(
-        text,
+        widget.text,
         textAlign: TextAlign.center,
         style: const TextStyle(color: Colors.white),
       ),
@@ -88,25 +117,47 @@ class Option extends StatelessWidget {
 }
 
 // Jautājums ar tā tekstu un atbilžu variantiem
-class Question extends StatelessWidget {
+class Question extends StatefulWidget {
   final String text;
   final List<Option> options;
+  final Function(int) addPoints;
   const Question({
     super.key,
     required this.text,
     required this.options,
+    required this.addPoints,
   });
+
+  @override
+  State<StatefulWidget> createState() => _QuestionState();
+}
+
+class _QuestionState extends State<Question> {
+  bool answered = false;
+
+  void _isOptionSelected(isCorrect) {
+    setState(() {
+      answered = true;
+      if (isCorrect) {
+        // Paziņo lietotnes galvenajam state, ka iegūts viens punkts
+        widget.addPoints(1);
+      }
+    });
+  }
 
   // Sagatavo jautājuma atbilžu rindas
   List<Widget> getOptionRows() {
     List<Widget> rows = List.empty(growable: true);
     List<Option> rowOptions = List.empty(growable: true);
 
-    for (var i = 0; i < options.length; i++) {
-      rowOptions.add(options[i]);
+    for (var i = 0; i < widget.options.length; i++) {
+      Option option = widget.options[i];
+      option.optionSelected = _isOptionSelected;
+      option.isLocked = answered;
+      rowOptions.add(option);
 
       // Vienā rindā ir divi elementi vai viens, ja vairāk atbilžu iespēju nav
-      if (rowOptions.length == 2 || i + 1 == options.length) {
+      if (rowOptions.length == 2 || i + 1 == widget.options.length) {
         rows.add(
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
@@ -133,7 +184,7 @@ class Question extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 5),
             child: Text(
-              text,
+              widget.text,
               textAlign: TextAlign.center,
             ),
           ),
